@@ -29,8 +29,9 @@ export function TabBar({ state, navigation }: BottomTabBarProps) {
           backgroundColor: colors.card,
           borderTopWidth: 1,
           borderTopColor: colors.border,
-          paddingTop: spacing.sm,
+          paddingTop: spacing.md,
           paddingBottom: insets.bottom || spacing.md,
+          paddingHorizontal: spacing.sm,
         },
         shadow,
       ]}
@@ -49,12 +50,18 @@ export function TabBar({ state, navigation }: BottomTabBarProps) {
           <Pressable
             key={route.key}
             onPress={onPress}
-            style={{ flex: 1, alignItems: 'center', justifyContent: 'center', gap: 3 }}
+            style={({ pressed }) => ({
+              flex: 1,
+              alignItems: 'center',
+              justifyContent: 'center',
+              gap: 4,
+              opacity: pressed ? 0.7 : 1,
+            })}
             accessibilityRole="button"
             accessibilityState={focused ? { selected: true } : {}}
           >
-            <TabIcon name={route.name as TabName} color={color} size={22} />
-            <LabelSm color={color} style={{ fontSize: 9 }}>
+            <TabIcon name={route.name as TabName} color={color} size={24} />
+            <LabelSm color={color} style={{ fontSize: 10 }}>
               {LABELS[route.name] ?? route.name}
             </LabelSm>
           </Pressable>

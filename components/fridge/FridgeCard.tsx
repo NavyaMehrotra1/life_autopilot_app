@@ -46,17 +46,17 @@ export function FridgeCard() {
 
   return (
     <Card bare>
-      <Pressable onPress={toggle} style={{ padding: spacing.lg }}>
+      <Pressable onPress={toggle} style={{ padding: spacing.xl }}>
         <View style={{ flexDirection: 'row', justifyContent: 'space-between', alignItems: 'baseline' }}>
           <Title>the fridge</Title>
           <LabelSm dim>{open ? 'tap to close' : 'tap to open'}</LabelSm>
         </View>
-        <LabelSm color={expiring.length ? colors.amber : colors.muted} style={{ marginTop: 4 }}>
+        <LabelSm color={expiring.length ? colors.amber : colors.muted} style={{ marginTop: spacing.md }}>
           {summary}
         </LabelSm>
 
         {/* stage: interior behind, door in front */}
-        <View style={{ height: STAGE_HEIGHT, marginTop: spacing.md }}>
+        <View style={{ height: STAGE_HEIGHT, marginTop: spacing.lg }}>
           <FridgeInterior items={active} height={STAGE_HEIGHT} />
           <FridgeDoor open={open} items={active} summary={summary} />
         </View>

@@ -26,11 +26,11 @@ export function Greeting({ name }: { name: string }) {
   const line = REASSURANCE[new Date().getDate() % REASSURANCE.length];
 
   return (
-    <View style={{ marginTop: spacing.md, marginBottom: spacing.lg }}>
+    <View style={{ marginTop: spacing.lg, marginBottom: spacing.xxl }}>
       <GreetingText>
         Good {greet}, {first}.
       </GreetingText>
-      <GreetingSub dim style={{ marginTop: 2 }}>
+      <GreetingSub dim style={{ marginTop: spacing.md }}>
         {line}
       </GreetingSub>
     </View>
