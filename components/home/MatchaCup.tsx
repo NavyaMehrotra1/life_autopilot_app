@@ -1,16 +1,20 @@
-import React, { useEffect } from 'react';
-import { Pressable, View } from 'react-native';
-import Svg, { ClipPath, Defs, Ellipse, G, Path, Rect } from 'react-native-svg';
+import React, { useEffect, useRef, useState } from 'react';
+import { Platform, Pressable, View } from 'react-native';
+import Svg, { ClipPath, Defs, Ellipse, G, Path } from 'react-native-svg';
 import Animated, {
   Easing,
+  useAnimatedProps,
   useAnimatedStyle,
   useSharedValue,
   withRepeat,
+  withSpring,
   withTiming,
 } from 'react-native-reanimated';
+import * as Haptics from 'expo-haptics';
 import { useTheme } from '@/lib/ThemeContext';
 import { spacing } from '@/constants/theme';
 import { lerpColor } from '@/lib/color';
+import { Confetti } from '@/components/ui/Confetti';
 import { Label, Mono } from '@/components/ui/Type';
 import {
   DAILY_TASKS,
@@ -20,6 +24,12 @@ import {
 
 const EMPTY = '#C8D8A8';
 const FULL = '#4A7A3A';
+
+// Inner cup vertical span for the liquid (viewBox coords).
+const TOP = 44;
+const BOTTOM = 96;
+
+const AnimatedPath = Animated.createAnimatedComponent(Path);
 
 function Steam({ delay }: { delay: number }) {
   const t = useSharedValue(0);
@@ -46,6 +56,58 @@ function Steam({ delay }: { delay: number }) {
   );
 }
 
+/**
+ * Real liquid: the surface is a live sine wave, the level springs toward the
+ * task ratio, and completing a task kicks a `slosh` that spikes the amplitude
+ * then settles — so the matcha visibly rises and rocks as the day fills in.
+ * Two offset wave layers give it a little depth.
+ */
+function Liquid({ ratio, color }: { ratio: number; color: string }) {
+  const level = useSharedValue(ratio);
+  const phase = useSharedValue(0);
+  const slosh = useSharedValue(0);
+
+  useEffect(() => {
+    phase.value = withRepeat(withTiming(1, { duration: 2600, easing: Easing.linear }), -1, false);
+  }, [phase]);
+
+  useEffect(() => {
+    level.value = withSpring(ratio, { damping: 12, stiffness: 90, mass: 0.8 });
+    slosh.value = 1;
+    slosh.value = withTiming(0, { duration: 1400, easing: Easing.out(Easing.cubic) });
+  }, [ratio, level, slosh]);
+
+  function wave(phaseShift: number, ampScale: number) {
+    'worklet';
+    const lvl = level.value;
+    const surfaceY = BOTTOM - lvl * (BOTTOM - TOP);
+    const amp = (1.0 + slosh.value * 4.5) * ampScale;
+    const k = phase.value * Math.PI * 2 + phaseShift;
+    const x0 = 26;
+    const x1 = 74;
+    const steps = 10;
+    let d = `M ${x0} ${BOTTOM + 8}`;
+    d += ` L ${x0} ${surfaceY + amp * Math.sin(k)}`;
+    for (let i = 1; i <= steps; i++) {
+      const x = x0 + ((x1 - x0) * i) / steps;
+      const y = surfaceY + amp * Math.sin(k + (i / steps) * Math.PI * 3);
+      d += ` L ${x} ${y}`;
+    }
+    d += ` L ${x1} ${BOTTOM + 8} Z`;
+    return d;
+  }
+
+  const backProps = useAnimatedProps(() => ({ d: wave(Math.PI * 0.6, 0.7) }));
+  const frontProps = useAnimatedProps(() => ({ d: wave(0, 1) }));
+
+  return (
+    <G clipPath="url(#cupInner)">
+      <AnimatedPath animatedProps={backProps} fill={lerpColor(color, '#FFFFFF', 0.28)} opacity={0.55} />
+      <AnimatedPath animatedProps={frontProps} fill={color} />
+    </G>
+  );
+}
+
 export function MatchaCup() {
   const { colors } = useTheme();
   const done = useDailyStore((s) => s.done);
@@ -57,10 +119,22 @@ export function MatchaCup() {
   const full = completed === total;
 
   const fillColor = lerpColor(EMPTY, FULL, ratio);
-  // Inner cup vertical span for the liquid (viewBox coords).
-  const top = 44;
-  const bottom = 96;
-  const fillTop = bottom - ratio * (bottom - top);
+
+  // Leaf burst + haptic the moment the cup tops off.
+  const prev = useRef(completed);
+  const [burst, setBurst] = useState(false);
+  useEffect(() => {
+    if (completed > prev.current && completed === total) {
+      setBurst(true);
+      if (Platform.OS !== 'web') {
+        Haptics.notificationAsync(Haptics.NotificationFeedbackType.Success);
+      }
+      const id = setTimeout(() => setBurst(false), 1800);
+      prev.current = completed;
+      return () => clearTimeout(id);
+    }
+    prev.current = completed;
+  }, [completed, total]);
 
   return (
     <View style={{ flexDirection: 'row', alignItems: 'center' }}>
@@ -72,6 +146,7 @@ export function MatchaCup() {
             <Steam delay={5} />
           </>
         )}
+        {burst && <Confetti variant="leaves" />}
         <Svg width={104} height={124} viewBox="0 0 100 120">
           <Defs>
             <ClipPath id="cupInner">
@@ -80,13 +155,7 @@ export function MatchaCup() {
           </Defs>
 
           {/* liquid */}
-          {ratio > 0 && (
-            <G clipPath="url(#cupInner)">
-              <Rect x={30} y={fillTop} width={40} height={bottom - fillTop + 4} fill={fillColor} />
-              {/* surface foam line */}
-              <Ellipse cx={50} cy={fillTop} rx={17} ry={2.4} fill={lerpColor(fillColor, '#FFFFFF', 0.35)} />
-            </G>
-          )}
+          <Liquid ratio={ratio} color={fillColor} />
 
           {/* cup outline */}
           <Path

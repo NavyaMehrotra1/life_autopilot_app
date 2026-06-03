@@ -3,6 +3,7 @@ import { View } from 'react-native';
 import { useRouter } from 'expo-router';
 import { Screen } from '@/components/ui/Screen';
 import { Card } from '@/components/ui/Card';
+import { Entrance } from '@/components/ui/Entrance';
 import { Title, LabelSm, Mono } from '@/components/ui/Type';
 import { spacing } from '@/constants/theme';
 
@@ -21,8 +22,12 @@ import { useUserStore } from '@/stores/userStore';
 import { useMealsStore } from '@/stores/mealsStore';
 import { useAttentionItems } from '@/lib/attention';
 
-function Section({ children }: { children: React.ReactNode }) {
-  return <View style={{ marginTop: spacing.xl + 4 }}>{children}</View>;
+function Section({ children, index = 0 }: { children: React.ReactNode; index?: number }) {
+  return (
+    <Entrance index={index} style={{ marginTop: spacing.xl + 4 }}>
+      {children}
+    </Entrance>
+  );
 }
 
 export default function HomeScreen() {
@@ -34,25 +39,31 @@ export default function HomeScreen() {
 
   return (
     <Screen>
-      <Greeting name={name} />
-      <MetaBar count={attention.length} />
+      <Entrance index={0}>
+        <Greeting name={name} />
+        <MetaBar count={attention.length} />
+      </Entrance>
 
-      <LivingRow />
+      <Entrance index={1}>
+        <LivingRow />
+      </Entrance>
 
-      <Card>
-        <Title style={{ marginBottom: spacing.md }}>today's cup</Title>
-        <MatchaCup />
-      </Card>
+      <Entrance index={2}>
+        <Card>
+          <Title style={{ marginBottom: spacing.md }}>today's cup</Title>
+          <MatchaCup />
+        </Card>
+      </Entrance>
 
-      <Section>
+      <Section index={3}>
         <AttentionNote items={attention} />
       </Section>
 
-      <Section>
+      <Section index={4}>
         <FridgeCard />
       </Section>
 
-      <Section>
+      <Section index={5}>
         <Card onPress={() => router.push('/(tabs)/meals')}>
           <View style={{ flexDirection: 'row', justifyContent: 'space-between', alignItems: 'baseline', marginBottom: spacing.md }}>
             <Title>today's meals</Title>
@@ -66,19 +77,19 @@ export default function HomeScreen() {
         </Card>
       </Section>
 
-      <Section>
+      <Section index={6}>
         <LaundryTimers />
       </Section>
 
-      <Section>
+      <Section index={7}>
         <ReadingCard onPress={() => router.push('/reading')} />
       </Section>
 
-      <Section>
+      <Section index={8}>
         <SuppliesCard onPress={() => router.push('/(tabs)/profile')} />
       </Section>
 
-      <Section>
+      <Section index={9}>
         <Card onPress={() => router.push('/(tabs)/fitness')}>
           <View style={{ flexDirection: 'row', justifyContent: 'space-between', alignItems: 'baseline' }}>
             <Title>fitness</Title>

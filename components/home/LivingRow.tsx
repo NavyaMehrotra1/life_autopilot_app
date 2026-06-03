@@ -5,6 +5,7 @@ import { spacing } from '@/constants/theme';
 import { Tree } from '@/components/living/Tree';
 import { Buddy } from '@/components/living/Buddy';
 import { Label, Mono } from '@/components/ui/Type';
+import { RollingNumber } from '@/components/ui/RollingNumber';
 import { useBuddyFlags, useLifeScore } from '@/lib/scoring';
 
 /** Tree + Buddy, sharing the one life-health score. */
@@ -24,9 +25,10 @@ export function LivingRow() {
           accessibilityLabel="your tree — tap to see what needs attention"
         >
           <Tree state={state} size={108} />
-          <Label dim style={{ marginTop: 2 }}>
-            {state} · {score}
-          </Label>
+          <View style={{ flexDirection: 'row', alignItems: 'center', marginTop: 2 }}>
+            <Label dim>{state} · </Label>
+            <RollingNumber value={score} fontSize={12} letterSpacing={1.4} color={colors.muted} />
+          </View>
         </Pressable>
 
         {/* Buddy — tap to pet. */}
