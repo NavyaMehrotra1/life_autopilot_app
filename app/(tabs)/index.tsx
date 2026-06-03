@@ -22,7 +22,7 @@ import { useMealsStore } from '@/stores/mealsStore';
 import { useAttentionItems } from '@/lib/attention';
 
 function Section({ children }: { children: React.ReactNode }) {
-  return <View style={{ marginTop: spacing.lg }}>{children}</View>;
+  return <View style={{ marginTop: spacing.xl + 4 }}>{children}</View>;
 }
 
 export default function HomeScreen() {

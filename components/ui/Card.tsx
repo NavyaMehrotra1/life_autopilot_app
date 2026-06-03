@@ -25,9 +25,9 @@ export function Card({ children, onPress, style, bare, raised = true }: Props) {
   const base: ViewStyle = {
     backgroundColor: colors.card,
     borderColor: colors.border,
-    borderWidth: StyleSheet.hairlineWidth,
+    borderWidth: 1,
     borderRadius: radius.lg,
-    padding: bare ? 0 : spacing.lg,
+    padding: bare ? 0 : spacing.xl,
   };
   const content = (
     <View style={[base, raised && shadow, style]}>{children}</View>
@@ -36,7 +36,7 @@ export function Card({ children, onPress, style, bare, raised = true }: Props) {
   return (
     <Pressable
       onPress={onPress}
-      style={({ pressed }) => [{ opacity: pressed ? 0.94 : 1, transform: [{ scale: pressed ? 0.995 : 1 }] }]}
+      style={({ pressed }) => [{ opacity: pressed ? 0.92 : 1, transform: [{ scale: pressed ? 0.993 : 1 }] }]}
     >
       {content}
     </Pressable>

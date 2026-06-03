@@ -32,13 +32,13 @@ export function MealCard({ slot, meal, active, onPress }: Props) {
       onPress={onPress}
       style={({ pressed }) => ({
         flex: 1,
-        minHeight: 104,
+        minHeight: 108,
         borderRadius: radius.md,
         borderWidth: 1,
         borderColor: active ? colors.amber : colors.border,
         backgroundColor: active ? colors.well : 'transparent',
-        padding: spacing.md,
-        opacity: pressed ? 0.7 : 1,
+        padding: spacing.lg,
+        opacity: pressed ? 0.75 : 1,
       })}
     >
       <LabelSm color={active ? colors.amber : colors.muted}>{SLOT_LABEL[slot]}</LabelSm>

@@ -21,16 +21,16 @@ export function Screen({ children, header = true, scroll = true, contentStyle }:
   const inner = (
     <>
       {header ? <AppHeader /> : null}
-      <View style={[{ paddingHorizontal: spacing.xl }, contentStyle]}>{children}</View>
+      <View style={[{ paddingHorizontal: spacing.xl + 2 }, contentStyle]}>{children}</View>
     </>
   );
 
   return (
-    <View style={{ flex: 1, backgroundColor: colors.bg, paddingTop: insets.top + spacing.sm }}>
+    <View style={{ flex: 1, backgroundColor: colors.bg, paddingTop: insets.top + spacing.md }}>
       {scroll ? (
         <ScrollView
           showsVerticalScrollIndicator={false}
-          contentContainerStyle={{ paddingBottom: spacing.xxxl + insets.bottom + 72 }}
+          contentContainerStyle={{ paddingBottom: spacing.xxxl + insets.bottom + 80 }}
           keyboardShouldPersistTaps="handled"
         >
           {inner}

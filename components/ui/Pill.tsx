@@ -21,8 +21,8 @@ export function Pill({ label, selected, onPress }: Props) {
         borderColor: selected ? colors.inverse : colors.border,
         borderWidth: 1,
         borderRadius: radius.pill,
-        paddingVertical: spacing.sm + 1,
-        paddingHorizontal: spacing.lg,
+        paddingVertical: spacing.md,
+        paddingHorizontal: spacing.lg + 4,
         opacity: pressed ? 0.8 : 1,
       })}
     >
