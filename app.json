@@ -1,0 +1,60 @@
+{
+  "expo": {
+    "name": "Life Autopilot",
+    "slug": "life-autopilot",
+    "version": "0.1.0",
+    "scheme": "lifeautopilot",
+    "orientation": "portrait",
+    "icon": "./assets/icon.png",
+    "userInterfaceStyle": "automatic",
+    "newArchEnabled": true,
+    "splash": {
+      "image": "./assets/splash-icon.png",
+      "resizeMode": "contain",
+      "backgroundColor": "#EDEAE3"
+    },
+    "ios": {
+      "supportsTablet": true,
+      "bundleIdentifier": "com.lifeautopilot.app",
+      "infoPlist": {
+        "UIBackgroundModes": ["fetch", "remote-notification"]
+      }
+    },
+    "android": {
+      "package": "com.lifeautopilot.app",
+      "adaptiveIcon": {
+        "backgroundColor": "#EDEAE3",
+        "foregroundImage": "./assets/android-icon-foreground.png",
+        "backgroundImage": "./assets/android-icon-background.png",
+        "monochromeImage": "./assets/android-icon-monochrome.png"
+      },
+      "predictiveBackGestureEnabled": false
+    },
+    "web": {
+      "favicon": "./assets/favicon.png",
+      "bundler": "metro",
+      "output": "static",
+      "name": "Life Autopilot",
+      "shortName": "Autopilot",
+      "themeColor": "#EDEAE3",
+      "backgroundColor": "#EDEAE3",
+      "display": "standalone",
+      "orientation": "portrait",
+      "lang": "en",
+      "description": "your warm, calm life dashboard — meals, fridge, fitness, reading."
+    },
+    "plugins": [
+      "expo-router",
+      "expo-font",
+      [
+        "expo-notifications",
+        {
+          "color": "#C8922A"
+        }
+      ]
+    ],
+    "experiments": {
+      "typedRoutes": false
+    }
+  }
+}

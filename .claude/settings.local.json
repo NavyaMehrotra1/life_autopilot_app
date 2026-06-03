@@ -1,0 +1,9 @@
+{
+  "permissions": {
+    "allow": [
+      "Read(//private/tmp/**)",
+      "Bash(rm -rf la_scaffold)",
+      "Bash(npx --yes create-expo-app@latest la_scaffold --template blank-typescript)"
+    ]
+  }
+}
